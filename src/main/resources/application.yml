@@ -1,7 +1,14 @@
 eureka:
   client:
     fetch-registry: true
-
+    register-with-eureka: true
+    service-url: 
+      defaultZone: https://localhost:8761/
+    tls:
+      enabled: true
+      key-store-type: PKCS12
+      key-store-password: password
+      key-store: classpath:localhost.jks
 server:
   port: 8081
   servlet:
@@ -11,8 +18,9 @@ server:
     enabled-protocols:
     - TLSv1+TLSv1.1+TLSv1.2+TLSv1.3
     key-store-type: PKCS12
-    key-store-password: piyush
-    key-store: /home/ubuntu/localhost.p12
+    key-store-provider: SUN
+    key-store: classpath:localhost.jks
+    key-store-password: password
   http2:
     enabled: true
     
@@ -50,4 +58,4 @@ logging:
     '[org.springframework.boot.jdbc]': debug
     '[com.zaxxer.hikari]' : debug  
     '[org.postgresql.jdbc]': debug
-    '[org.springframework.jdbc]': debug
+    '[org.springframework.jdbc]': info

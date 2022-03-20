@@ -1,11 +1,13 @@
 package com.developermind.phonebook.services.impl;
 
 import java.util.List;
+import java.util.Locale;
 
 import javax.validation.constraints.NotNull;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.context.MessageSource;
 import org.springframework.dao.DuplicateKeyException;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.http.HttpStatus;
@@ -24,9 +26,12 @@ class PhonebookServiceImpl implements PhonebookServices {
 
 	private final PhonebookRepository phonebookRepository;
 
-	public PhonebookServiceImpl(PhonebookRepository phonebookRepository) {
+	private final MessageSource messageSource;
+
+	public PhonebookServiceImpl(PhonebookRepository phonebookRepository, MessageSource messageSource) {
 		super();
 		this.phonebookRepository = phonebookRepository;
+		this.messageSource = messageSource;
 	}
 
 	@Override
@@ -34,12 +39,15 @@ class PhonebookServiceImpl implements PhonebookServices {
 		try {
 			return phonebookRepository.addRecord(phonebookForm);
 		} catch (DuplicateKeyException duplicateKeyException) {
-			logger.error(Messages.getString("PhonebookServiceImpl.0"), duplicateKeyException); //$NON-NLS-1$
-			throw new PhonebookExceptions(phonebookForm, Messages.getString("PhonebookServiceImpl.1"), //$NON-NLS-1$
+			logger.error(messageSource.getMessage("PhonebookServiceImpl.0", null, Locale.ENGLISH), //$NON-NLS-1$
+					duplicateKeyException);
+			throw new PhonebookExceptions(phonebookForm,
+					messageSource.getMessage("PhonebookServiceImpl.1", null, Locale.ENGLISH), //$NON-NLS-1$
 					HttpStatus.CONFLICT.name());
 		} catch (Exception exception) {
-			logger.error(Messages.getString("PhonebookServiceImpl.0"), exception); //$NON-NLS-1$
-			throw new PhonebookExceptions(phonebookForm, Messages.getString("PhonebookServiceImpl.2"), //$NON-NLS-1$
+			logger.error(messageSource.getMessage("PhonebookServiceImpl.0", null, Locale.ENGLISH), exception); //$NON-NLS-1$
+			throw new PhonebookExceptions(phonebookForm,
+					messageSource.getMessage("PhonebookServiceImpl.2", null, Locale.ENGLISH), //$NON-NLS-1$
 					HttpStatus.INTERNAL_SERVER_ERROR.name());
 		}
 	}
@@ -49,8 +57,9 @@ class PhonebookServiceImpl implements PhonebookServices {
 		try {
 			phonebookRepository.deleteRecord(id);
 		} catch (Exception exception) {
-			logger.error(Messages.getString("PhonebookServiceImpl.3"), id, exception); //$NON-NLS-1$
-			throw new PhonebookExceptions(id, Messages.getString("PhonebookServiceImpl.4"), //$NON-NLS-1$
+			logger.error(messageSource.getMessage("PhonebookServiceImpl.3", new Long[] { id }, Locale.ENGLISH), //$NON-NLS-1$
+					exception);
+			throw new PhonebookExceptions(id, messageSource.getMessage("PhonebookServiceImpl.4", null, Locale.ENGLISH), //$NON-NLS-1$
 					HttpStatus.INTERNAL_SERVER_ERROR.name());
 		}
 	}
@@ -60,11 +69,12 @@ class PhonebookServiceImpl implements PhonebookServices {
 		try {
 			return phonebookRepository.getRecord(id);
 		} catch (EmptyResultDataAccessException emptyResultDataAccessException) {
-			logger.error(Messages.getString("PhonebookServiceImpl.5"), id, emptyResultDataAccessException); //$NON-NLS-1$
-			throw new PhonebookExceptions(id, Messages.getString("PhonebookServiceImpl.6"), //$NON-NLS-1$
+			logger.error(messageSource.getMessage("PhonebookServiceImpl.5", new Long[] { id }, Locale.ENGLISH), //$NON-NLS-1$
+					emptyResultDataAccessException);
+			throw new PhonebookExceptions(id, messageSource.getMessage("PhonebookServiceImpl.6", null, Locale.ENGLISH), //$NON-NLS-1$
 					HttpStatus.NOT_FOUND.name());
 		} catch (Exception exception) {
-			throw new PhonebookExceptions(id, Messages.getString("PhonebookServiceImpl.7"), //$NON-NLS-1$
+			throw new PhonebookExceptions(id, messageSource.getMessage("PhonebookServiceImpl.7", null, Locale.ENGLISH), //$NON-NLS-1$
 					HttpStatus.INTERNAL_SERVER_ERROR.name());
 		}
 	}
@@ -74,8 +84,8 @@ class PhonebookServiceImpl implements PhonebookServices {
 		try {
 			return phonebookRepository.getRecords();
 		} catch (Exception exception) {
-			logger.error(Messages.getString("PhonebookServiceImpl.8"), exception); //$NON-NLS-1$
-			throw new PhonebookExceptions(Messages.getString("PhonebookServiceImpl.9"), //$NON-NLS-1$
+			logger.error(messageSource.getMessage("PhonebookServiceImpl.8", null, Locale.ENGLISH), exception); //$NON-NLS-1$
+			throw new PhonebookExceptions(messageSource.getMessage("PhonebookServiceImpl.9", null, Locale.ENGLISH), //$NON-NLS-1$
 					HttpStatus.INTERNAL_SERVER_ERROR.name());
 		}
 	}
@@ -86,12 +96,12 @@ class PhonebookServiceImpl implements PhonebookServices {
 		try {
 			return phonebookRepository.updateRecord(id, phonebookForm);
 		} catch (DuplicateKeyException duplicateKeyException) {
-			logger.error(Messages.getString("PhonebookServiceImpl.10"), id, duplicateKeyException); //$NON-NLS-1$
-			throw new PhonebookExceptions(phonebookForm, Messages.getString("PhonebookServiceImpl.11"), //$NON-NLS-1$
+			logger.error(messageSource.getMessage("PhonebookServiceImpl.10",new Long[] {id},Locale.ENGLISH),duplicateKeyException); //$NON-NLS-1$
+			throw new PhonebookExceptions(phonebookForm, messageSource.getMessage("PhonebookServiceImpl.11",null,Locale.ENGLISH), //$NON-NLS-1$
 					HttpStatus.CONFLICT.name());
 		} catch (Exception exception) {
-			logger.error(Messages.getString("PhonebookServiceImpl.10"), id, exception); //$NON-NLS-1$
-			throw new PhonebookExceptions(id, Messages.getString("PhonebookServiceImpl.12"), //$NON-NLS-1$
+			logger.error(messageSource.getMessage("PhonebookServiceImpl.10",new Long[] {id},Locale.ENGLISH),exception); //$NON-NLS-1$
+			throw new PhonebookExceptions(id, messageSource.getMessage("PhonebookServiceImpl.12",null,Locale.ENGLISH), //$NON-NLS-1$
 					HttpStatus.INTERNAL_SERVER_ERROR.name());
 		}
 	}

@@ -1,7 +1,9 @@
 package com.developermind.phonebook.controller;
 
 import java.util.List;
+import java.util.Locale;
 
+import org.springframework.context.MessageSource;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -29,9 +31,12 @@ public class PhonebookRestController {
 
 	private final PhonebookServices phonebookServices;
 
-	public PhonebookRestController(PhonebookServices phonebookServices) {
+	private final MessageSource messageSource;
+
+	public PhonebookRestController(PhonebookServices phonebookServices, MessageSource messageSource) {
 		super();
 		this.phonebookServices = phonebookServices;
+		this.messageSource = messageSource;
 	}
 
 	@PostMapping(value = "/add", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
@@ -42,17 +47,18 @@ public class PhonebookRestController {
 			String fieldName = bindingResult.getFieldError().getField();
 			String rejectedValue = String.valueOf(bindingResult.getFieldError().getRejectedValue());
 			String defaultMessage = bindingResult.getFieldError().getDefaultMessage();
-			String errorMessage = Messages.getString("PhonebookRestController.0") + fieldName //$NON-NLS-1$
-					+ Messages.getString("PhonebookRestController.1") + rejectedValue //$NON-NLS-1$
-					+ Messages.getString("PhonebookRestController.2") //$NON-NLS-1$
+			String errorMessage = messageSource.getMessage("PhonebookRestController.0", null, Locale.ENGLISH) //$NON-NLS-1$
+					+ fieldName + messageSource.getMessage("PhonebookRestController.1", null, Locale.ENGLISH) //$NON-NLS-1$
+					+ rejectedValue + messageSource.getMessage("PhonebookRestController.2", null, Locale.ENGLISH) //$NON-NLS-1$
 					+ defaultMessage;
 			return ResponseEntity.badRequest()
 					.body(new ResponseDto<PhonebookDto>(errorMessage, false, null, HttpStatus.BAD_REQUEST));
 		}
 		try {
 			PhonebookDto phonebookDto = phonebookServices.addRecord(phonebookForm);
-			return ResponseEntity.status(HttpStatus.CREATED).body(new ResponseDto<>(
-					Messages.getString("PhonebookRestController.3"), true, phonebookDto, HttpStatus.CREATED)); //$NON-NLS-1$
+			return ResponseEntity.status(HttpStatus.CREATED)
+					.body(new ResponseDto<>(messageSource.getMessage("PhonebookRestController.3", null, Locale.ENGLISH), //$NON-NLS-1$
+							true, phonebookDto, HttpStatus.CREATED));
 		} catch (PhonebookExceptions phonebookExceptions) {
 			return ResponseEntity.internalServerError()
 					.body(new ResponseDto<PhonebookDto>(phonebookExceptions.getMessage(), false, null,
@@ -69,8 +75,10 @@ public class PhonebookRestController {
 		}
 		try {
 			phonebookServices.deleteRecord(id);
-			return ResponseEntity.status(HttpStatus.OK).body(
-					new ResponseDto<Void>(Messages.getString("PhonebookRestController.4"), true, null, HttpStatus.OK)); //$NON-NLS-1$
+			return ResponseEntity.status(HttpStatus.OK)
+					.body(new ResponseDto<Void>(
+							messageSource.getMessage("PhonebookRestController.4", null, Locale.ENGLISH), true, null, //$NON-NLS-1$
+							HttpStatus.OK));
 		} catch (PhonebookExceptions phonebookExceptions) {
 			return ResponseEntity.internalServerError().body(new ResponseDto<Void>(phonebookExceptions.getMessage(),
 					false, null, HttpStatus.valueOf(phonebookExceptions.getStatus())));
@@ -81,8 +89,9 @@ public class PhonebookRestController {
 	public ResponseEntity<ResponseDto<PhonebookDto>> getRecord(@PathVariable Long id) {
 		try {
 			PhonebookDto phonebookDto = phonebookServices.getRecord(id);
-			return ResponseEntity.status(HttpStatus.OK).body(new ResponseDto<>(
-					Messages.getString("PhonebookRestController.5"), true, phonebookDto, HttpStatus.FOUND)); //$NON-NLS-1$
+			return ResponseEntity.status(HttpStatus.OK)
+					.body(new ResponseDto<>(messageSource.getMessage("PhonebookRestController.5", null, Locale.ENGLISH), //$NON-NLS-1$
+							true, phonebookDto, HttpStatus.FOUND));
 		} catch (PhonebookExceptions phonebookExceptions) {
 			return ResponseEntity.notFound().build();
 		}
@@ -92,8 +101,9 @@ public class PhonebookRestController {
 	public ResponseEntity<ResponseDto<List<PhonebookDto>>> getRecords() {
 		try {
 			List<PhonebookDto> phonebookDtoList = phonebookServices.getRecords();
-			return ResponseEntity.status(HttpStatus.OK).body(new ResponseDto<>(
-					Messages.getString("PhonebookRestController.6"), true, phonebookDtoList, HttpStatus.OK)); //$NON-NLS-1$
+			return ResponseEntity.status(HttpStatus.OK)
+					.body(new ResponseDto<>(messageSource.getMessage("PhonebookRestController.6", null, Locale.ENGLISH), //$NON-NLS-1$
+							true, phonebookDtoList, HttpStatus.OK));
 		} catch (PhonebookExceptions phonebookExceptions) {
 			return ResponseEntity.internalServerError()
 					.body(new ResponseDto<List<PhonebookDto>>(phonebookExceptions.getMessage(), false, null,
@@ -109,9 +119,9 @@ public class PhonebookRestController {
 			String fieldName = bindingResult.getFieldError().getField();
 			String rejectedValue = bindingResult.getFieldError().getRejectedValue().toString();
 			String defaultMessage = bindingResult.getFieldError().getDefaultMessage();
-			String errorMessage = Messages.getString("PhonebookRestController.7") + fieldName //$NON-NLS-1$
-					+ Messages.getString("PhonebookRestController.8") + rejectedValue //$NON-NLS-1$
-					+ Messages.getString("PhonebookRestController.9") //$NON-NLS-1$
+			String errorMessage = messageSource.getMessage("PhonebookRestController.7", null, Locale.ENGLISH) //$NON-NLS-1$
+					+ fieldName + messageSource.getMessage("PhonebookRestController.8", null, Locale.ENGLISH) //$NON-NLS-1$
+					+ rejectedValue + messageSource.getMessage("PhonebookRestController.9", null, Locale.ENGLISH) //$NON-NLS-1$
 					+ defaultMessage;
 			return ResponseEntity.badRequest()
 					.body(new ResponseDto<PhonebookDto>(errorMessage, false, null, HttpStatus.BAD_REQUEST));
@@ -123,8 +133,10 @@ public class PhonebookRestController {
 		}
 		try {
 			PhonebookDto phonebookDto = phonebookServices.updateRecord(id, phonebookForm);
-			return ResponseEntity.status(HttpStatus.OK).body(new ResponseDto<>(
-					Messages.getString("PhonebookRestController.10"), true, phonebookDto, HttpStatus.OK)); //$NON-NLS-1$
+			return ResponseEntity.status(HttpStatus.OK)
+					.body(new ResponseDto<>(
+							messageSource.getMessage("PhonebookRestController.10", null, Locale.ENGLISH), true, //$NON-NLS-1$
+							phonebookDto, HttpStatus.OK));
 		} catch (PhonebookExceptions phonebookExceptions) {
 			return ResponseEntity.internalServerError()
 					.body(new ResponseDto<PhonebookDto>(phonebookExceptions.getMessage(), false, null,
