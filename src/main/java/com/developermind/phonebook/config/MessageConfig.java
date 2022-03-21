@@ -5,6 +5,7 @@ import java.nio.charset.StandardCharsets;
 import org.springframework.context.MessageSource;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.support.ReloadableResourceBundleMessageSource;
 import org.springframework.context.support.ResourceBundleMessageSource;
 
 @Configuration
@@ -12,14 +13,14 @@ public class MessageConfig {
 
 	@Bean
 	public MessageSource messageSource() {
-		ResourceBundleMessageSource resourceBundleMessageSource = new ResourceBundleMessageSource();
-		resourceBundleMessageSource.setAlwaysUseMessageFormat(true);
-		resourceBundleMessageSource.setCacheMillis(3600);
-		resourceBundleMessageSource.setDefaultEncoding(StandardCharsets.UTF_8.toString());
-		resourceBundleMessageSource.setFallbackToSystemLocale(true);
-		resourceBundleMessageSource.setUseCodeAsDefaultMessage(true);
-		resourceBundleMessageSource.addBasenames("message.properties");
-		return resourceBundleMessageSource;
+		ReloadableResourceBundleMessageSource reloadableResourceBundleMessageSource = new ReloadableResourceBundleMessageSource();
+		reloadableResourceBundleMessageSource.setAlwaysUseMessageFormat(true);
+		reloadableResourceBundleMessageSource.setCacheMillis(3600);
+		reloadableResourceBundleMessageSource.setDefaultEncoding(StandardCharsets.UTF_8.toString());
+		reloadableResourceBundleMessageSource.setFallbackToSystemLocale(true);
+		reloadableResourceBundleMessageSource.setUseCodeAsDefaultMessage(true);
+		reloadableResourceBundleMessageSource.setBasenames("classpath:locale/messages");
+		return reloadableResourceBundleMessageSource;
 	}
 
 }

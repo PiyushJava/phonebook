@@ -1,6 +1,6 @@
 {
 	"info": {
-		"_postman_id": "42944d4e-ee73-49b9-b5eb-0c4d30ee1361",
+		"_postman_id": "d167fd9b-c860-408b-864f-4f2bf0ac7c49",
 		"name": "phonebook",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
 	},
@@ -11,12 +11,10 @@
 				"method": "GET",
 				"header": [],
 				"url": {
-					"raw": "http://localhost:8081/phonebook/api/v1/phonebook/",
-					"protocol": "http",
+					"raw": "{{phonebook-url}}/phonebook/api/v1/phonebook/",
 					"host": [
-						"localhost"
+						"{{phonebook-url}}"
 					],
-					"port": "8081",
 					"path": [
 						"phonebook",
 						"api",
@@ -34,12 +32,10 @@
 				"method": "GET",
 				"header": [],
 				"url": {
-					"raw": "http://localhost:8081/phonebook/api/v1/phonebook/3",
-					"protocol": "http",
+					"raw": "{{phonebook-url}}/phonebook/api/v1/phonebook/3",
 					"host": [
-						"localhost"
+						"{{phonebook-url}}"
 					],
-					"port": "8081",
 					"path": [
 						"phonebook",
 						"api",
@@ -66,12 +62,10 @@
 					}
 				},
 				"url": {
-					"raw": "http://localhost:8081/phonebook/api/v1/phonebook/add",
-					"protocol": "http",
+					"raw": "{{phonebook-url}}/phonebook/api/v1/phonebook/add",
 					"host": [
-						"localhost"
+						"{{phonebook-url}}"
 					],
-					"port": "8081",
 					"path": [
 						"phonebook",
 						"api",
@@ -98,12 +92,10 @@
 					}
 				},
 				"url": {
-					"raw": "http://localhost:8081/phonebook/api/v1/phonebook/update/1",
-					"protocol": "http",
+					"raw": "{{phonebook-url}}/phonebook/api/v1/phonebook/update/1",
 					"host": [
-						"localhost"
+						"{{phonebook-url}}"
 					],
-					"port": "8081",
 					"path": [
 						"phonebook",
 						"api",
@@ -122,12 +114,10 @@
 				"method": "DELETE",
 				"header": [],
 				"url": {
-					"raw": "http://localhost:8081/phonebook/api/v1/phonebook/1",
-					"protocol": "http",
+					"raw": "{{phonebook-url}}/phonebook/api/v1/phonebook/1",
 					"host": [
-						"localhost"
+						"{{phonebook-url}}"
 					],
-					"port": "8081",
 					"path": [
 						"phonebook",
 						"api",
@@ -138,6 +128,12 @@
 				}
 			},
 			"response": []
+		}
+	],
+	"variable": [
+		{
+			"key": "phonebook-url",
+			"value": "https://localhost:8081"
 		}
 	]
 }

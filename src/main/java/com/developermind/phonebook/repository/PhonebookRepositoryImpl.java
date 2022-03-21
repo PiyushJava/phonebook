@@ -30,9 +30,7 @@ import com.developermind.phonebook.form.PhonebookForm;
 import com.zaxxer.hikari.HikariDataSource;
 
 @Repository
-class PhonebookRepositoyImpl implements PhonebookRepository {
-
-	private final List<String> columnNames = new ArrayList<>(9);
+class PhonebookRepositoryImpl implements PhonebookRepository {
 
 	private final JdbcTemplate jdbcTemplate;
 
@@ -42,7 +40,7 @@ class PhonebookRepositoyImpl implements PhonebookRepository {
 
 	private final MessageSource messageSource;
 
-	PhonebookRepositoyImpl(HikariDataSource hikariDataSource, MessageSource messageSource) {
+	public PhonebookRepositoryImpl(HikariDataSource hikariDataSource, MessageSource messageSource) {
 		this.messageSource = messageSource;
 		this.jdbcTemplate = new JdbcTemplate(hikariDataSource);
 		this.namedParameterJdbcTemplate = new NamedParameterJdbcTemplate(hikariDataSource);
@@ -51,12 +49,6 @@ class PhonebookRepositoyImpl implements PhonebookRepository {
 
 	@Override
 	public PhonebookDto addRecord(@NotNull PhonebookForm phonebookForm) {
-		simpleJdbcInsert.setTableName(messageSource.getMessage("PhonebookRepositoyImpl.0", null, Locale.ENGLISH)); //$NON-NLS-1$
-		simpleJdbcInsert.setSchemaName(messageSource.getMessage("PhonebookRepositoyImpl.1", null, Locale.ENGLISH)); //$NON-NLS-1$
-		simpleJdbcInsert
-				.setGeneratedKeyName(messageSource.getMessage("PhonebookRepositoyImpl.2", null, Locale.ENGLISH)); //$NON-NLS-1$
-		simpleJdbcInsert.setColumnNames(columnNames);
-		simpleJdbcInsert.compile();
 		Map<String, Object> args = new JSONObject(phonebookForm).toMap();
 		Long id = simpleJdbcInsert.executeAndReturnKey(args).longValue();
 		return new PhonebookDto(id, phonebookForm);
@@ -66,7 +58,7 @@ class PhonebookRepositoyImpl implements PhonebookRepository {
 	public void deleteRecord(@NotNull Long id) {
 		MapSqlParameterSource mapSqlParameterSource = new MapSqlParameterSource();
 		mapSqlParameterSource.addValue("id", id);
-		namedParameterJdbcTemplate.execute(messageSource.getMessage("PhonebookRepositoyImpl.3", null, Locale.ENGLISH),
+		namedParameterJdbcTemplate.execute(messageSource.getMessage("PhonebookRepositoryImpl.3", null, Locale.ENGLISH),
 				mapSqlParameterSource, new PreparedStatementCallback<Boolean>() {
 					@Override
 					public Boolean doInPreparedStatement(PreparedStatement ps)
@@ -78,20 +70,27 @@ class PhonebookRepositoyImpl implements PhonebookRepository {
 
 	@Override
 	public PhonebookDto getRecord(@NotNull Long id) {
-		return jdbcTemplate.queryForObject(messageSource.getMessage("PhonebookRepositoyImpl.4", null, Locale.ENGLISH), //$NON-NLS-1$
+		return jdbcTemplate.queryForObject(messageSource.getMessage("PhonebookRepositoryImpl.4", null, Locale.ENGLISH), //$NON-NLS-1$
 				new Long[] { id }, new int[] { Types.BIGINT }, new PhonebookRowMapper());
 	}
 
 	@Override
 	public List<PhonebookDto> getRecords() {
-		return jdbcTemplate.query(messageSource.getMessage("PhonebookRepositoyImpl.5", null, Locale.ENGLISH), //$NON-NLS-1$
+		return jdbcTemplate.query(messageSource.getMessage("PhonebookRepositoryImpl.5", null, Locale.ENGLISH), //$NON-NLS-1$
 				new PhonebookRowMapper());
 	}
 
 	@PostConstruct
 	void init() {
-		columnNames.addAll(Arrays.asList(PhonebookDto.class.getFields()).stream().map(Field::getName)
+		final List<String> columnNames = new ArrayList<>(9);
+		columnNames.addAll(Arrays.stream(PhonebookDto.class.getFields()).map(Field::getName)
 				.collect(Collectors.toList()));
+		simpleJdbcInsert.setTableName(messageSource.getMessage("PhonebookRepositoryImpl.0", null, Locale.ENGLISH)); //$NON-NLS-1$
+		simpleJdbcInsert.setSchemaName(messageSource.getMessage("PhonebookRepositoryImpl.1", null, Locale.ENGLISH)); //$NON-NLS-1$
+		simpleJdbcInsert
+				.setGeneratedKeyName(messageSource.getMessage("PhonebookRepositoryImpl.2", null, Locale.ENGLISH)); //$NON-NLS-1$
+		simpleJdbcInsert.setColumnNames(columnNames);
+		simpleJdbcInsert.compile();
 	}
 
 	@Override
@@ -100,7 +99,7 @@ class PhonebookRepositoyImpl implements PhonebookRepository {
 		Map<String, Object> args = new JSONObject(phonebookForm).toMap();
 		args.forEach(mapSqlParameterSource::addValue);
 		mapSqlParameterSource.addValue("id", id);
-		namedParameterJdbcTemplate.update(messageSource.getMessage("PhonebookRepositoyImpl.6", null, Locale.ENGLISH), //$NON-NLS-1$
+		namedParameterJdbcTemplate.update(messageSource.getMessage("PhonebookRepositoryImpl.6", null, Locale.ENGLISH), //$NON-NLS-1$
 				mapSqlParameterSource);
 		return null;
 	}
